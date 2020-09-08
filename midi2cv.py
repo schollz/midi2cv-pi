@@ -14,6 +14,7 @@ import os
 import json
 import math
 from subprocess import Popen, PIPE, STDOUT
+from signal import signal, SIGINT
 
 import click
 import numpy as np
@@ -33,7 +34,6 @@ keys_on = 0
 
 
 def init_mcp4725():
-    logger.info("initializing mcp4725")
     global i2c, dac
     import board
     import busio
@@ -89,9 +89,9 @@ def match_note_to_freq(freq):
 def do_tuning():
     print("""note! before tuning...
 
-- ...make sure that your device is connected
+- ...make sure that your synth is connected
   via the USB audio adapter line-in. 
-- ...make sure that your device is outputting
+- ...make sure that your synth outputs only
   pure tones (turn off effects!).
 
 """)
@@ -237,6 +237,14 @@ def listen_for_midi():
 # cli
 #
 
+def handler(signal_received, frame):
+    try:
+        set_voltage(0)
+    except:
+        pass
+    logger.info("exiting")
+    sys.exit(0)
+
 @click.command()
 @click.option("--vdd", help="set the rail-to-rail voltage", default=5.2)
 @click.option("--tune", help="activate tuning", is_flag=True, default=False)
@@ -248,6 +256,8 @@ def listen_for_midi():
     default=False,
 )
 def gorun(tune, play, vdd, noinit):
+    signal(SIGINT, handler)
+
     global rail_to_rail_vdd
     rail_to_rail_vdd = vdd
 
@@ -269,11 +279,11 @@ if __name__ == "__main__":
 ██║╚██╔╝██║██║██║  ██║██║    ██╔═══╝     ██║     ╚██╗ ██╔╝
 ██║ ╚═╝ ██║██║██████╔╝██║    ███████╗    ╚██████╗ ╚████╔╝ 
 ╚═╝     ╚═╝╚═╝╚═════╝ ╚═╝    ╚══════╝     ╚═════╝  ╚═══╝  
+version v0.1.0 (github.com/schollz/midi2cv)
 
 convert any incoming midi signal into a control voltage
 from your raspberry pi.                                                 
-
-more info: https://github.com/schollz/midi2cv
+ 
 """
     )
     gorun()
