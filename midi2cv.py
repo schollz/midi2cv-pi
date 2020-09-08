@@ -321,6 +321,8 @@ def gorun(tune, play, vdd, noinit):
 
 
 if __name__ == "__main__":
+    logger.remove()
+    logger.add(sys.stderr, format="<green>{time:HH:mm:ss}</green> (<cyan>{function}:{line}</cyan>) - {message}")
     print(
         """
 ███╗   ███╗██╗██████╗ ██╗    ██████╗      ██████╗██╗   ██╗
