@@ -7,11 +7,10 @@
 ╚═╝     ╚═╝╚═╝╚═════╝ ╚═╝    ╚══════╝     ╚═════╝  ╚═══╝  
 ```
 
-This is a python script for a Raspberry Pi that can convert MIDI to CV, with automatic tuning to determine relationship between voltage and frequency. No PCBs, and no breadboards required. Just six wires, a MCP4725, a Raspberry Pi, and a CV device you want to add MIDI.
+This is a python script for a Raspberry Pi that can convert MIDI to CV, with automatic tuning to determine relationship between voltage and frequency. No PCBs, and no breadboards required. You just need a Raspberry Pi, a USB audio interface, a cheap DAC, and the CV synth that you want to add MIDI.
 
-I use this script to control the Korg Monotron Delay via MIDI. More info and tutorial: https://schollz.com/raspberrypi/monotron.
+I use this script to control the Korg Monotron Delay via MIDI but it might work with other CV instruments. More info and tutorial for using with the Monotron: https://schollz.com/raspberrypi/monotron.
 
-You can use this with basically any device that outputs sound and is controlled via CV. The following are generic instructions. See [the instructions for the Monotron](https://schollz.com/raspberrypi/monotron) for a more specific example.
 
 ## Requirements
 
