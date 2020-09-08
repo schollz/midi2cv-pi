@@ -15,9 +15,10 @@ You can use this with basically any device that outputs sound and is controlled 
 
 ## Requirements
 
-- Raspberry Pi
-- USB audio adapter
-- MCP4725
+- [Raspberry Pi](https://www.amazon.com/gp/product/B07BC7BMHY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B07BC7BMHY&linkCode=as2&tag=scholl-20) (any model should work)
+- [USB audio adapter](https://www.amazon.com/gp/product/B01N905VOY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B01N905VOY&linkCode=as2&tag=scholl-20) (~$16)
+- [MCP4725](https://www.amazon.com/gp/product/B00SK8MBXI/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00SK8MBXI&linkCode=as2&tag=scholl-20) (~$11)
+- [Female-to-female jumper cables](https://www.amazon.com/gp/product/B01L5ULRUA/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B01L5ULRUA&linkCode=as2&tag=scholl-20) (~$6)
 
 
 ## Setup Raspberry Pi
