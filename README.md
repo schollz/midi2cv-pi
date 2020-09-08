@@ -11,7 +11,6 @@ This is a python script for a Raspberry Pi that can convert MIDI to CV, with aut
 
 I use this script to control the Korg Monotron Delay via MIDI but it might work with other CV instruments. More info and tutorial for using with the Monotron: https://schollz.com/raspberrypi/monotron.
 
-
 ## Requirements
 
 - [Raspberry Pi](https://www.amazon.com/gp/product/B07BC7BMHY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B07BC7BMHY&linkCode=as2&tag=scholl-20) (any model should work)
