@@ -26,8 +26,8 @@ Use SSH to get into your Raspberry Pi and install the following prerequisites:
 
 ```
 > sudo apt update
-> sudo apt install python3 python3-pip python3-numpy portaudio19-dev sox
-> sudo -H python3 -m pip install loguru click mido python-rtmidi adafruit-circuitpython-mcp4725
+> sudo apt install python3 python3-pip python3-numpy portaudio19-dev sox gnuplot
+> sudo -H python3 -m pip install loguru click mido python-rtmidi adafruit-circuitpython-mcp4725 termplotlib
 ```
 
 Now download the `midi2cv.py` script:

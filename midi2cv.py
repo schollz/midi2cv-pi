@@ -21,6 +21,7 @@ import numpy as np
 from loguru import logger
 import mido
 from mido.ports import MultiPort
+import termplotlib as tpl
 
 # rail-to-rail voltage
 # set this with `--vdd`
@@ -87,17 +88,19 @@ def match_note_to_freq(freq):
 
 
 def do_tuning():
-    print("""note! before tuning...
+    print(
+        """note! before tuning...
 
 - ...make sure that your synth is connected
   via the USB audio adapter line-in. 
 - ...make sure that your synth outputs only
   pure tones (turn off effects!).
 
-""")
+"""
+    )
 
     for i in range(5):
-        print("initiating tuning in {}".format(5-i),end="\r")
+        print("initiating tuning in {}".format(5 - i), end="\r")
         time.sleep(1)
     voltage_to_frequency = {}
     previous_freq = 0
@@ -108,8 +111,32 @@ def do_tuning():
             continue
         voltage_to_frequency[voltage] = freq
         previous_freq = freq
+        os.system("clear")
+        plot_points(voltage_to_frequency)
+
     with open("voltage_to_frequency.json", "w") as f:
         f.write(json.dumps(voltage_to_frequency))
+
+
+def plot_points(voltage_to_frequency):
+    x = []
+    y0 = []
+    for k in voltage_to_frequency:
+        x.append(float(k))
+        y0.append(voltage_to_frequency[k])
+    fig = tpl.figure()
+    print("\n")
+    fig.plot(
+        x,
+        y0,
+        plot_command="plot '-' w points",
+        width=50,
+        height=20,
+        xlabel="voltage (v)",
+        title="frequency (hz) vs voltage",
+    )
+    fig.show()
+    print("\n")
 
 
 def load_tuning():
@@ -117,12 +144,29 @@ def load_tuning():
     voltage_to_frequency = json.load(open("voltage_to_frequency.json", "rb"))
     x = []
     y = []
+    y0 = []
     for k in voltage_to_frequency:
         x.append(float(k))
+        y0.append(voltage_to_frequency[k])
         y.append(math.log(voltage_to_frequency[k]))
-        print(k, voltage_to_frequency[k])
     mb = np.polyfit(y, x, 1)
-    logger.info(mb)
+    fig = tpl.figure()
+    print("\n")
+    fig.plot(
+        x,
+        y0,
+        plot_command="plot '-' w points",
+        width=60,
+        height=22,
+        xlabel="voltage (v)",
+        title="frequency (hz) vs voltage",
+        label="freq = exp((volts{:+2.2f})/{:2.2f})   ".format(mb[1], mb[0]),
+    )
+    fig.show()
+    print("\n")
+    time.sleep(1)
+    # plx.scatter(x, y,cols=80,rows=10,xlim=[np.min(x), np.max(x)])
+    # plx.show()
 
 
 def sample_frequency_at_voltage(voltage):
@@ -130,14 +174,17 @@ def sample_frequency_at_voltage(voltage):
     time.sleep(1.0)
     record_audio()
     freq = analyze_sox()
-    print("{:2.2f} hz at {:2.2f} volt".format(freq, voltage))
-    return frelca
+    # print("{:2.2f} hz at {:2.2f} volt".format(freq, voltage))
+    return freq
 
 
 def record_audio():
-    cmd = "arecord -d 1 -f cd -t wav /tmp/1s.wav"
+    cmd = "arecord -d 1 -f cd -t wav -D sysdefault:CARD=1 /tmp/1s.wav"
     p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
+    if b"Recording WAVE" not in output:
+        raise output
+    cmd = "sox /tmp/1s.wav -n stat -freq"
     p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
     with open("/tmp/1s.dat", "wb") as f:
@@ -207,6 +254,7 @@ def analyze_sox():
 # midi listeners
 #
 
+
 def midi(name):
     global keys_on
     logger.info("listening on '{}'", name)
@@ -224,7 +272,6 @@ def midi(name):
 
 def listen_for_midi():
     inputs = mido.get_input_names()
-    logger.info("inputs:\n\n- {}\n".format("\n- ".join(inputs)))
     for name in inputs:
         t = threading.Thread(target=midi, args=(name,))
         t.daemon = True
@@ -233,9 +280,11 @@ def listen_for_midi():
     while True:
         time.sleep(10)
 
+
 #
 # cli
 #
+
 
 def handler(signal_received, frame):
     try:
@@ -244,6 +293,7 @@ def handler(signal_received, frame):
         pass
     logger.info("exiting")
     sys.exit(0)
+
 
 @click.command()
 @click.option("--vdd", help="set the rail-to-rail voltage", default=5.2)
@@ -282,8 +332,7 @@ if __name__ == "__main__":
 version v0.1.0 (github.com/schollz/midi2cv)
 
 convert any incoming midi signal into a control voltage
-from your raspberry pi.                                                 
- 
+from your raspberry pi.
 """
     )
     gorun()
