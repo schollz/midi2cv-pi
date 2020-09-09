@@ -42,6 +42,7 @@ def init_mcp4725():
 
     i2c = busio.I2C(board.SCL, board.SDA)
     dac = adafruit_mcp4725.MCP4725(i2c)
+    set_voltage(0)
 
 
 def set_voltage(volts):
