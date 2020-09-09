@@ -259,9 +259,15 @@ def midi(name):
     global keys_on
     logger.info("listening on '{}'", name)
     with mido.open_input(name) as inport:
+        name = name.split()
+        if len(name) > 2:
+            name = ' '.join(name[:2])
+        else:
+            name = ' '.join(name)
+        name = name.lower()
         for msg in inport:
             if msg.type == "note_on":
-                logger.info(f"{msg.type} {msg.note} {msg.velocity}")
+                logger.info(f"[{name}] {msg.type} {msg.note} {msg.velocity}")
                 set_voltage(note_to_voltage(msg.note))
                 keys_on += 1
             elif msg.type == "note_off":
