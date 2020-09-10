@@ -173,24 +173,39 @@ def load_tuning():
 def sample_frequency_at_voltage(voltage):
     set_voltage(voltage)
     time.sleep(1.0)
-    record_audio()
-    freq = analyze_sox()
+    freq = get_frequency_analysis()
     # print("{:2.2f} hz at {:2.2f} volt".format(freq, voltage))
     return freq
 
 
-def record_audio():
-    cmd = "arecord -d 1 -f cd -t wav -D sysdefault:CARD=1 /tmp/1s.wav"
+def get_frequency_analysis():
+    cmd = "arecord -d 0.2 -f cd -t wav -D sysdefault:CARD=1 /tmp/1s.wav"
     p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
     if b"Recording WAVE" not in output:
         raise output
-    cmd = "sox /tmp/1s.wav -n stat -freq"
+    # cmd = "sox /tmp/1s.wav -n stat -freq"
+    cmd = "aubio pitch -m schmitt -H 1024 /tmp/1s.wav"
     p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
     with open("/tmp/1s.dat", "wb") as f:
         f.write(output)
 
+    freq = analyze_aubio()
+    return freq
+
+def analyze_aubio():
+    gathered_freqs = []
+    with open("/tmp/1s.dat","r") as f:
+        for line in f:
+            s = line.split()
+            if len(s) != 2:
+                continue
+            gathered_freqs.append(float(s[1]))
+    if len(gathered_freqs) == 0:
+        return -1 
+    avg = np.mean(gathered_freqs)
+    return avg
 
 def analyze_sox():
     previous_amp = 0
