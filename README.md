@@ -51,6 +51,32 @@ Make sure that your synthesizer is outputting as pure a sound as possible. And t
 > python3 midi2cv.py --tune
 ```
 
+The tuning will automatically create a fit to the voltage-frequency data:
+
+```
+                  frequency (hz) vs voltage
+
+  2000 +------------------------------------------------+
+  1800 |                                              A |
+       |       freq = exp((volts-0.89)/0.67)       A A  |
+  1600 |                                           A    |
+  1400 |                                          A     |
+       |                                        A       |
+  1200 |                                     A A        |
+  1000 |                                    A           |
+       |                                 AA             |
+   800 |                            A AA                |
+   600 |                         A A                    |
+       |                   AA AA                        |
+   400 |             AA AA                              |
+   200 |  A AA AA AA                                    |
+       | A                                              |
+     0 +------------------------------------------------+
+      2.6   2.8    3    3.2    3.4   3.6   3.8    4    4.2
+                          voltage (v)
+
+```
+
 After tuning, it will save a calibration that will automatically load the settings for playing.
 
 ## Playing 
