@@ -7,15 +7,15 @@
 ╚═╝     ╚═╝╚═╝╚═════╝ ╚═╝    ╚══════╝     ╚═════╝  ╚═══╝  
 ```
 
-This is a python script for a Raspberry Pi that can convert MIDI to CV, with automatic tuning to determine relationship between voltage and frequency. No PCBs, and no breadboards required. You just need a Raspberry Pi, a USB audio interface, a cheap DAC, and the CV synth that you want to add MIDI.
+This DIY MIDI-to-CV controller allows you to **automatically tune** voltage-to-frequencies *and* **only has three components** (and no PCBs!). Other solutions - like the [MIDI-IF kit](http://beatnic.jp/manuals/monotron-midi/midi-kit.html) or [Arduino-based midi2cv](https://github.com/elkayem/midi2cv) - require extensive soldering, dozens of components, and require manual tuning. 
 
 I use this script to control the Korg Monotron Delay via MIDI but it might work with other CV instruments. More info and tutorial for using with the Monotron: https://schollz.com/raspberrypi/monotron.
 
 ## Requirements
 
-- [Raspberry Pi](https://www.amazon.com/gp/product/B07BC7BMHY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B07BC7BMHY&linkCode=as2&tag=scholl-20) (any model should work)
-- [USB audio adapter](https://www.amazon.com/gp/product/B01N905VOY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B01N905VOY&linkCode=as2&tag=scholl-20) (~$16)
-- [MCP4725](https://www.amazon.com/gp/product/B00SK8MBXI/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00SK8MBXI&linkCode=as2&tag=scholl-20) (~$11)
+- [Raspberry Pi](https://www.amazon.com/gp/product/B07BC7BMHY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B07BC7BMHY&linkCode=as2&tag=scholl-20) (~$15 used)
+- [USB audio adapter](https://www.amazon.com/gp/product/B01N905VOY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B01N905VOY&linkCode=as2&tag=scholl-20) (~$5)
+- [MCP4725](https://www.amazon.com/gp/product/B00SK8MBXI/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00SK8MBXI&linkCode=as2&tag=scholl-20) (~$5)
 - [Female-to-female jumper cables](https://www.amazon.com/gp/product/B01L5ULRUA/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B01L5ULRUA&linkCode=as2&tag=scholl-20) (~$6)
 
 
@@ -26,8 +26,8 @@ Use SSH to get into your Raspberry Pi and install the following prerequisites:
 
 ```
 > sudo apt update
-> sudo apt install python3 python3-pip python3-numpy portaudio19-dev sox gnuplot
-> sudo -H python3 -m pip install loguru click mido python-rtmidi adafruit-circuitpython-mcp4725 termplotlib
+> sudo apt install python3 python3-pip python3-numpy portaudio19-dev sox gnuplot ffmpeg
+> sudo -H python3 -m pip install loguru click mido python-rtmidi adafruit-circuitpython-mcp4725 termplotlib aubio
 ```
 
 Now download the `midi2cv.py` script:
