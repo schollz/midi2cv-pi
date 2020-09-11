@@ -58,7 +58,7 @@ The tuning will automatically create a fit to the voltage-frequency data:
 
   2000 +------------------------------------------------+
   1800 |                                              A |
-       |       freq = exp((volts-0.89)/0.67)       A A  |
+       |                                           A A  |
   1600 |                                           A    |
   1400 |                                          A     |
        |                                        A       |
