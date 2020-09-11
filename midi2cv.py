@@ -105,7 +105,7 @@ def do_tuning():
         time.sleep(1)
     voltage_to_frequency = {}
     previous_freq = 0
-    for voltage in range(240, int(rail_to_rail_vdd * 80), 8):
+    for voltage in range(260, int(rail_to_rail_vdd * 80), 5):
         voltage = float(voltage) / 100.0
         freq = sample_frequency_at_voltage(voltage)
         if freq < previous_freq:
@@ -179,7 +179,7 @@ def sample_frequency_at_voltage(voltage):
 
 
 def get_frequency_analysis():
-    cmd = "arecord -d 0.2 -f cd -t wav -D sysdefault:CARD=1 /tmp/1s.wav"
+    cmd = "arecord -d 1 -f cd -t wav -D sysdefault:CARD=1 /tmp/1s.wav"
     p = Popen(cmd, shell=True, stdin=PIPE, stdout=PIPE, stderr=STDOUT, close_fds=True)
     output = p.stdout.read()
     if b"Recording WAVE" not in output:
@@ -197,14 +197,20 @@ def get_frequency_analysis():
 def analyze_aubio():
     gathered_freqs = []
     with open("/tmp/1s.dat","r") as f:
+        linenum = 0
         for line in f:
+            linenum += 1
+            if linenum < 5:
+                continue
             s = line.split()
             if len(s) != 2:
                 continue
-            gathered_freqs.append(float(s[1]))
+            freq = float(s[1])
+            if freq > 100:
+                gathered_freqs.append(freq)
     if len(gathered_freqs) == 0:
         return -1 
-    avg = np.mean(gathered_freqs)
+    avg = np.median(gathered_freqs)
     return avg
 
 def analyze_sox():
