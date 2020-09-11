@@ -9,14 +9,18 @@
 
 This DIY MIDI-to-CV controller allows you to **automatically tune** voltage-to-frequencies *and* **only has three components** (and no PCBs!). Other solutions - like the [MIDI-IF kit](http://beatnic.jp/manuals/monotron-midi/midi-kit.html) or [Arduino-based midi2cv](https://github.com/elkayem/midi2cv) - require extensive soldering, dozens of components, and require manual tuning. 
 
-I use this script to control the Korg Monotron Delay via MIDI but it might work with other CV instruments. More info and tutorial for using with the Monotron: https://schollz.com/raspberrypi/monotron.
+I use this script to control the Korg Monotron Delay via MIDI but it might work with other CV instruments. More info and tutorial for using with the Monotron: [schollz.com/monotron](https://schollz.com/raspberrypi/monotron).
+
+## Demo 
+
+<p align="center"><a href="https://www.youtube.com/watch?v=Winu-9RH_co"><img src="https://user-images.githubusercontent.com/6550035/92925687-b6edea00-f3ef-11ea-9d4b-e5da34268015.png" alt="Demo of playing" width=80%></a></p>
+
 
 ## Requirements
 
 - [Raspberry Pi](https://www.amazon.com/gp/product/B07BC7BMHY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B07BC7BMHY&linkCode=as2&tag=scholl-20) (~$15 used)
 - [USB audio adapter](https://www.amazon.com/gp/product/B01N905VOY/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B01N905VOY&linkCode=as2&tag=scholl-20) (~$5)
 - [MCP4725](https://www.amazon.com/gp/product/B00SK8MBXI/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B00SK8MBXI&linkCode=as2&tag=scholl-20) (~$5)
-- [Female-to-female jumper cables](https://www.amazon.com/gp/product/B01L5ULRUA/ref=as_li_tl?ie=UTF8&camp=1789&creative=9325&creativeASIN=B01L5ULRUA&linkCode=as2&tag=scholl-20) (~$6)
 
 
 ## Setup Raspberry Pi
@@ -38,9 +42,9 @@ Now download the `midi2cv.py` script:
 
 ## Tuning
 
-Attach the MCP4725 to the Raspberry Pi and attach the MCP4725 voltage output to your device. Now connect an audio cable from your device to the USB audio adapter on the Raspberry Pi. 
+Attach the MCP4725 to the Raspberry Pi and attach the MCP4725 voltage output to your synthesizer. Now connect an audio cable from your synthesizer to the USB audio adapter on the Raspberry Pi. 
 
-Make sure that your device is outputting as pure a sound as possible. And then run:
+Make sure that your synthesizer is outputting as pure a sound as possible. And then run:
 
 
 ```
