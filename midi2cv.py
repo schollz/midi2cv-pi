@@ -26,6 +26,7 @@ import termplotlib as tpl
 # rail-to-rail voltage
 # set this with `--vdd`
 rail_to_rail_vdd = 5.2
+voltage_adjustment = 0
 mb = [1.51, 1.38]
 keys_on = 0
 
@@ -47,6 +48,7 @@ def init_mcp4725():
 
 def set_voltage(volts):
     global dac
+    volts += voltage_adjustment
     # logger.info("setting voltage={}", volts)
     if volts >= 0 and volts < rail_to_rail_vdd:
         dac.value = int(round(float(volts) / rail_to_rail_vdd * 65535.0))
@@ -194,9 +196,10 @@ def get_frequency_analysis():
     freq = analyze_aubio()
     return freq
 
+
 def analyze_aubio():
     gathered_freqs = []
-    with open("/tmp/1s.dat","r") as f:
+    with open("/tmp/1s.dat", "r") as f:
         linenum = 0
         for line in f:
             linenum += 1
@@ -209,9 +212,10 @@ def analyze_aubio():
             if freq > 100:
                 gathered_freqs.append(freq)
     if len(gathered_freqs) == 0:
-        return -1 
+        return -1
     avg = np.median(gathered_freqs)
     return avg
+
 
 def analyze_sox():
     previous_amp = 0
@@ -283,9 +287,9 @@ def midi(name):
     with mido.open_input(name) as inport:
         name = name.split()
         if len(name) > 2:
-            name = ' '.join(name[:2])
+            name = " ".join(name[:2])
         else:
-            name = ' '.join(name)
+            name = " ".join(name)
         name = name.lower()
         for msg in inport:
             if msg.type == "note_on":
@@ -327,17 +331,20 @@ def handler(signal_received, frame):
 @click.option("--vdd", help="set the rail-to-rail voltage", default=5.2)
 @click.option("--tune", help="activate tuning", is_flag=True, default=False)
 @click.option("--play", help="initialize playing", is_flag=True, default=False)
+@click.option("--adj", help="adjust voltage", default=0.0)
 @click.option(
     "--noinit",
     help="do not intiialize mcp4725 (debugging)",
     is_flag=True,
     default=False,
 )
-def gorun(tune, play, vdd, noinit):
+def gorun(tune, play, vdd, noinit, adj):
     signal(SIGINT, handler)
 
     global rail_to_rail_vdd
+    global voltage_adjustment
     rail_to_rail_vdd = vdd
+    voltage_adjustment = adj
 
     if not noinit:
         init_mcp4725()
@@ -350,7 +357,10 @@ def gorun(tune, play, vdd, noinit):
 
 if __name__ == "__main__":
     logger.remove()
-    logger.add(sys.stderr, format="<green>{time:HH:mm:ss}</green> (<cyan>{function}:{line}</cyan>) - {message}")
+    logger.add(
+        sys.stderr,
+        format="<green>{time:HH:mm:ss}</green> (<cyan>{function}:{line}</cyan>) - {message}",
+    )
     print(
         """
 ███╗   ███╗██╗██████╗ ██╗    ██████╗      ██████╗██╗   ██╗
