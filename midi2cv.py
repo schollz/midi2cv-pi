@@ -172,6 +172,12 @@ def load_tuning():
     # plx.show()
 
 
+def check_tuning():
+    for i in range(60, 70):
+        freq = sample_frequency_at_voltage(note_to_voltage(i))
+        print(i, freq, note_to_freq(i))
+
+
 def sample_frequency_at_voltage(voltage):
     set_voltage(voltage)
     time.sleep(1.0)
@@ -332,13 +338,14 @@ def handler(signal_received, frame):
 @click.option("--tune", help="activate tuning", is_flag=True, default=False)
 @click.option("--play", help="initialize playing", is_flag=True, default=False)
 @click.option("--adj", help="adjust voltage", default=0.0)
+@click.option("--do", help="runs a function (debugging)", is_flag=True, default=False)
 @click.option(
     "--noinit",
     help="do not intiialize mcp4725 (debugging)",
     is_flag=True,
     default=False,
 )
-def gorun(tune, play, vdd, noinit, adj):
+def gorun(tune, play, vdd, noinit, adj, do):
     signal(SIGINT, handler)
 
     global rail_to_rail_vdd
@@ -348,6 +355,8 @@ def gorun(tune, play, vdd, noinit, adj):
 
     if not noinit:
         init_mcp4725()
+    if do:
+        check_tuning()
     if tune:
         do_tuning()
     if play:
