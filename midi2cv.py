@@ -356,6 +356,7 @@ def gorun(tune, play, vdd, noinit, adj, do):
     if not noinit:
         init_mcp4725()
     if do:
+        load_tuning()
         check_tuning()
     if tune:
         do_tuning()
