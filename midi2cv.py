@@ -173,9 +173,20 @@ def load_tuning():
 
 
 def check_tuning():
-    for i in range(60, 70):
+    adjustment = []
+    cents_off = []
+    for i in range(60, 80, 2):
         freq = sample_frequency_at_voltage(note_to_voltage(i))
-        print(i, freq, note_to_freq(i))
+        cents = 1200 * np.log2(note_to_freq(i) / freq)
+        print(
+            "midi={}, target={:2.1f} hz, observed={:2.1f} hz, cents off={:2.1f} cents".format(
+                i, note_to_freq(i), freq, cents
+            )
+        )
+        cents_off.append(cents)
+    cents_off_mean = np.mean(cents_off)
+    cents_off_sd = np.std(cents_off)
+    print("mean cents off: {0:+} +/- {0:+}".format(cents_off_mean, cents_off_sd))
 
 
 def sample_frequency_at_voltage(voltage):
@@ -355,11 +366,9 @@ def gorun(tune, play, vdd, noinit, adj, do):
 
     if not noinit:
         init_mcp4725()
-    if do:
-        load_tuning()
-        check_tuning()
     if tune:
         do_tuning()
+        check_tuning()
     if play:
         load_tuning()
         listen_for_midi()
@@ -379,7 +388,7 @@ if __name__ == "__main__":
 ██║╚██╔╝██║██║██║  ██║██║    ██╔═══╝     ██║     ╚██╗ ██╔╝
 ██║ ╚═╝ ██║██║██████╔╝██║    ███████╗    ╚██████╗ ╚████╔╝ 
 ╚═╝     ╚═╝╚═╝╚═════╝ ╚═╝    ╚══════╝     ╚═════╝  ╚═══╝  
-version v0.1.0 (github.com/schollz/midi2cv)
+version v0.2.0 (github.com/schollz/midi2cv)
 
 convert any incoming midi signal into a control voltage
 from your raspberry pi.
